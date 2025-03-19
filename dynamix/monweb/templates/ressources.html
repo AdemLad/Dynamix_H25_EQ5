@@ -3,49 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Simulation Physique</title>
+    <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 </head>
 <body>
     
-    <!-- Création de l'engine -->
+    <script>
+        console.log(Matter);
 
-
-    <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
-    <script src="matter.js">
-
-        // module aliases
-        let Engine = Matter.Engine,
+        // Module aliases
+        var Engine = Matter.Engine,
             Render = Matter.Render,
             Runner = Matter.Runner,
             Bodies = Matter.Bodies,
             Composite = Matter.Composite;
-  
-        // create an engine
-        let engine = Engine.create();
-  
-        // create a renderer
-        let render = Render.create({
+
+        // Création de l'engine
+        var engine = Engine.create();
+
+        // Création du rendu
+        var render = Render.create({
             element: document.body,
-            engine: engine
+            engine: engine,
+            options: {
+                width: 800,
+                height: 600,
+                wireframes: false
+            }
         });
-  
-        // create two boxes and a ground
-        let boxA = Bodies.rectangle(400, 200, 80, 80);
-        let boxB = Bodies.rectangle(450, 50, 80, 80);
-        let ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
-  
-        // add all of the bodies to the world
+
+        // Création de deux boîtes et d'un sol
+        var boxA = Bodies.rectangle(400, 200, 80, 80);
+        var boxB = Bodies.rectangle(450, 50, 80, 80);
+        var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+
+        // Ajout des objets dans le monde
         Composite.add(engine.world, [boxA, boxB, ground]);
-  
-        // run the renderer
+
+        // Démarrer le rendu
         Render.run(render);
-  
-        // create runner
-        let runner = Runner.create();
-  
-        // run the engine
+
+        // Création et exécution du moteur
+        var runner = Runner.create();
         Runner.run(runner, engine);
-      </script>
+    </script>
 
 </body>
 </html>
