@@ -3,4 +3,8 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("statique/", views.statique, name="statique"),
+    path("cinetique/", views.cinetique, name="cinetique")
 ]
+    
+
