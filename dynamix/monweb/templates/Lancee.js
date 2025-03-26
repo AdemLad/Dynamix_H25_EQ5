@@ -1,13 +1,11 @@
-        var Engine = Matter.Engine,
+ar Engine = Matter.Engine,
             Render = Matter.Render,
             Runner = Matter.Runner,
             Bodies = Matter.Bodies,
             Composite = Matter.Composite,
-            Constraint = Matter.Constraint,
-            MouseConstraint = Matter.MouseConstraint,
+            Body = Matter.Body,
             Mouse = Matter.Mouse,
-            Body = Matter.Body;
-        
+            MouseConstraint = Matter.MouseConstraint;
 
         // Création de l'engine et du monde
         var engine = Engine.create();
@@ -37,10 +35,27 @@
         // Ajout des objets au monde
         Composite.add(world, [ground, projectile]);
 
+        // Ajout du contrôle souris
+        var mouse = Mouse.create(render.canvas);
+        var mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: { visible: false }
+            }
+        });
+
+        Composite.add(world, mouseConstraint);
+        render.mouse = mouse;
+
         // Fonction pour appliquer la force
         function applyForce() {
-            var forceX = parseFloat(document.getElementById("forceX").value);
-            var forceY = parseFloat(document.getElementById("forceY").value);
+            var force = parseFloat(document.getElementById("force").value);
+            var angle = parseFloat(document.getElementById("angle").value) * (Math.PI / 180); // Conversion en radians
+
+            var forceX = force * Math.cos(angle);
+            var forceY = -force * Math.sin(angle); // Négatif car l'axe Y est inversé en HTML
+
             Body.applyForce(projectile, { x: projectile.position.x, y: projectile.position.y }, { x: forceX, y: forceY });
         }
 
