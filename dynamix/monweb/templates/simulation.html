@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %} Home Page {% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendule Physique</title>
+    <script src="../simulation/matter.js"></script>
+    <script defer src= "../simulation/pendule.js"></script>
+    </head>
+    <body>
+     
+        <div class="controls">
+            <button onclick="resetPendulum()">Réinitialiser</button>
+        </div>
+     
+    </body>
+{% endblock %}

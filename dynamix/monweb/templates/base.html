@@ -5,32 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       {% block title %}
-        Django App
+        Dynamix
       {% endblock %}
     </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"  rel="stylesheet" />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">My Django App</a>
+      <a class="navbar-brand" href="http://127.0.0.1:8000/">Dynamix</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href="http://127.0.0.1:8000/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" id="aa">Simulation</a>
           </li>
         </ul>
       </div>
     </nav>
     <div class="container">{% block content %} {% endblock %}</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js" integrity="sha512-6+7rTBmR6pRFe9fa0vCFjFaHZj/XYa7774bEBzRtxgdpIJOS++R3cKd6Prg/eJmxtsJotd8KAg4g57uuVQsZKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" ></script>
+    
+    <script>
+      a = document.getElementById("aa")
+      a.addEventListener("click",function(){
+        var Engine = Matter.Engine,
+        Render = Matter.Render,
+        Runner = Matter.Runner,
+        Bodies = Matter.Bodies,
+        Composite = Matter.Composite,
+        Constraint = Matter.Constraint,
+        MouseConstraint = Matter.MouseConstraint,
+        Mouse = Matter.Mouse,
+        Body = Matter.Body;
+
+        // Création de l'engine et du monde
+        var engine = Engine.create();
+        var world = engine.world;
+
+        // Création du rendu
+        var render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+        width: 800,
+        height: 600,
+        wireframes: false
+          }
+        });
+
+Render.run(render);
+
+// Création du moteur physique
+var runner = Runner.create();
+Runner.run(runner, engine);
+
+// Point d'attache du pendule
+var pivot = Bodies.circle(400, 100, 10, { isStatic: true, render: { fillStyle: "black" } });
+
+// Masse suspendue
+var pendulum = Bodies.circle(400, 300, 30,
+{friction:0, inertia:Infinity, render: { fillStyle: "blue" } });
+
+// Liaison entre le pivot et le pendule
+var rod = Constraint.create({
+bodyA: pivot,
+bodyB: pendulum,
+length: 200,
+stiffness: 1,
+damping:0,
+render: { strokeStyle: "black", lineWidth: 3 }
+});
+
+// ajouter les control de souris
+var mouse = Mouse.create(render.canvas),
+mouseConstraint = MouseConstraint.create(engine, {
+mouse: mouse,
+constraint: {
+// permettre la rotation des corps
+angularStiffness: 0,
+render: {
+    visible: false
+}
+}  
+});
+
+// Synchroniser la souris et le Render
+render.mouse = mouse;
+
+// Ajout des objets au monde
+Composite.add(world, [pivot, pendulum, rod, mouseConstraint]);
+
+
+
+// Fonction pour réinitialiser le pendule
+function resetPendulum() {
+Body.setPosition(pendulum, { x: 400, y: 300 });
+Body.setVelocity(pendulum, { x: 0, y: 0 });
+Body.setAngularVelocity(pendulum, 0);
+}
+
+      })
+  </script>
   </body>
 </html>
  
