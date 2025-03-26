@@ -6,11 +6,7 @@ from django.shortcuts import render, HttpResponse
 def home(request) : 
     return render(request, "home.html")
 
-def statique(request) : 
-    return HttpResponse("Hello statique")
+def simulation(request) : 
+   return render(request, "simulation.html")
 
-def cinetique(request) : 
-    return HttpResponse("Hello cinetique")
 
-def simulationStatique(request) :
-    return HttpResponse(request, "simulationStatique.html")
