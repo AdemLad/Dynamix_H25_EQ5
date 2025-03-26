@@ -10,6 +10,7 @@
  
         // Création de l'engine et du monde
         var engine = Engine.create();
+
         var world = engine.world;
  
         // Création du rendu
@@ -34,7 +35,7 @@
  
         // Masse suspendue
         var pendulum = Bodies.circle(400, 300, 30, 
-            {friction:0, frictionAir:0, restitution: 1, density:1000, render: { fillStyle: "blue" } });
+            {friction:0, inertia:Infinity, render: { fillStyle: "blue" } });
  
         // Liaison entre le pivot et le pendule
         var rod = Constraint.create({
