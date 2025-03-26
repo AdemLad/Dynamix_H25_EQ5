@@ -33,8 +33,19 @@
         <label for="angleB">Angle B (°) :</label>
         <input type="number" id="angleB" value="45" step="1">
 
+        <label for="massA">Masse A :</label>
+        <input type="number" id="massA" value="5" step="0.1">
+        <label for="rayonA">Rayon A :</label>
+        <input type="number" id="rayonA" value="20" step="1">
+
+        <label for="massB">Masse B :</label>
+        <input type="number" id="massB" value="5" step="0.1">
+        <label for="rayonB">Rayon B :</label>
+        <input type="number" id="rayonB" value="20" step="1">
+
         <button onclick="applyForces()">Lancer</button>
         <button onclick="resetObjects()">Réinitialiser</button>
+        <button onclick="updateObjets()">Mettre à jour</button>
     </div>
 
     <script>
@@ -61,27 +72,54 @@
             }
         });
 
-        // Création des objets
+        // Création du sol
         var ground = Bodies.rectangle(400, 580, 810, 40, { isStatic: true, render: { fillStyle: '#060a19' } });
-        var boxA = Bodies.circle(150, 500, 20, { 
-            restitution: 0.8, 
-            density: 0.005, 
-            friction: 0,         // Pas de frottement avec le sol
-            frictionAir: 0,      // Pas de résistance de l'air
-            frictionStatic: 0    // Aucun frottement statique
+
+        // Définition des objets mobiles
+        var boxA, boxB;
+        function createObjects() {
+            var massA = parseFloat(document.getElementById("massA").value);
+            var radiusA = parseFloat(document.getElementById("rayonA").value);
+            var massB = parseFloat(document.getElementById("massB").value);
+            var radiusB = parseFloat(document.getElementById("rayonB").value);
+
+            boxA = Bodies.circle(150, 500, radiusA, {
+                mass: massA,
+                restitution: 0.8, 
+                density: 0.005, 
+                friction: 0, 
+                frictionAir: 0, 
+                frictionStatic: 0,
+                render: { fillStyle: 'red' }
             });
 
-        var boxB = Bodies.circle(650, 500, 20, { 
-            restitution: 0.8, 
-            density: 0.005, 
-            friction: 0, 
-            frictionAir: 0, 
-            frictionStatic: 0
-        });
+            boxB = Bodies.circle(650, 500, radiusB, { 
+                mass: massB,
+                restitution: 0.8, 
+                density: 0.005, 
+                friction: 0, 
+                frictionAir: 0, 
+                frictionStatic: 0,
+                render: { fillStyle: 'blue' }
+            });
 
+            Composite.add(world, [boxA, boxB]);
+        }
 
-        // Ajout des objets au monde
-        Composite.add(world, [ground, boxA, boxB]);
+        createObjects();
+        Composite.add(world, [ground]);
+
+        // Fonction pour mettre à jour les objets
+        function updateObjets() {
+            // Supprimer les anciens objets
+            Composite.remove(world, [boxA, boxB]);
+
+            // Recréer les objets avec les nouvelles valeurs
+            createObjects();
+
+            // Réinitialiser leur position
+            resetObjects();
+        }
 
         // Fonction pour appliquer la force sur les deux objets
         function applyForces() {
