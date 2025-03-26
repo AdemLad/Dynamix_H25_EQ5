@@ -1,4 +1,4 @@
-ar Engine = Matter.Engine,
+        var Engine = Matter.Engine,
             Render = Matter.Render,
             Runner = Matter.Runner,
             Bodies = Matter.Bodies,
@@ -10,6 +10,7 @@ ar Engine = Matter.Engine,
         // Création de l'engine et du monde
         var engine = Engine.create();
         var world = engine.world;
+        engine.gravity = 0;
 
         // Création du rendu
         var render = Render.create({
