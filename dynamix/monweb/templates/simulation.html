@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block title %} Home Page {% endblock %}
+{% block content %}
+<title>Pendule Physique</title>
+<script src="matter.js"></script>
+<script defer src= "pendule.js"></script>
+</head>
+<body>
+ 
+    <div class="controls">
+        <button onclick="resetPendulum()">Réinitialiser</button>
+    </div>
+ 
+</body>
+{% endblock %}
