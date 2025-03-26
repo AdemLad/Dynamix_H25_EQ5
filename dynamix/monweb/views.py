@@ -11,3 +11,6 @@ def statique(request) :
 
 def cinetique(request) : 
     return HttpResponse("Hello cinetique")
+
+def simulationStatique(request) :
+    return HttpResponse(request, "simulationStatique.html")
