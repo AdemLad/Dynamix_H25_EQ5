@@ -12,9 +12,6 @@ var Engine = Matter.Engine,
 var engine = Engine.create();
 var world = engine.world;
 
-// Désactiver la gravité
-engine.world.gravity.y = 0; // Gravité nulle
-
 // Créer le rendu
 var render = Render.create({
     element: document.body,
