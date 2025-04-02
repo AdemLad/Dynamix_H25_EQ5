@@ -65,7 +65,7 @@ render.canvas.style.left = '50%';
 render.canvas.style.transform = 'translate(-50%, -50%)';
 
 // Créer les murs du monde  
-const ground = Bodies.rectangle(WIDTH/2, HEIGHT-20, WIDTH, 20, { isStatic: true }); // Sol
+const ground = Bodies.rectangle(WIDTH/2, HEIGHT-10, WIDTH, 20, { isStatic: true }); // Sol
 const leftWall = Bodies.rectangle(0, HEIGHT/2, 20, HEIGHT, { isStatic: true });  // Mur gauche
 const rightWall = Bodies.rectangle(WIDTH, HEIGHT/2, 20, HEIGHT, { isStatic: true }); // Mur droit
 const topWall = Bodies.rectangle(WIDTH/2, 0, WIDTH, 20, { isStatic: true });  // Mur supérieur
