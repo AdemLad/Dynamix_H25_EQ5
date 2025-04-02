@@ -1,4 +1,99 @@
 {% extends "base.html" %} {% block title %} Home Page {% endblock %}
 {% block content %}
-<p>this is the home page</p>
+<style>body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    text-align: center;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 18px;
+  }
+  
+  .app {
+    background: url('hero-background.jpg') no-repeat center center/cover;
+    color: rgb(0, 0, 0);
+    padding: 100px 20px;
+    margin-bottom: 30px;
+  }
+  
+ .equpe {
+    padding: 50px 20px;
+  }
+  
+   .apps, .membres {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  
+   .apps div, .membres div {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    text-align: center;
+  }
+  .simulateur-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .simulateur-btn:hover {
+            background-color: #0056b3;
+        }
+  </style>
+  
+  <body>
+      
+      <section class="app">
+          <h1>Dynamix</h1>
+          <p>Engin de simulateur physique</p>
+      </section>
+      <section class="Simulateur">
+          <h2>Notre simulateur</h2>
+          <a href="http://127.0.0.1:8000/simulation/">
+            <button class="simulateur-btn">Simulateur</button>
+        </a>
+      </section>
+      <section class="equipe">
+          <h2>Collaborateurs</h2>
+          <div class="membres">
+            <div>Abdelmadjid Ammour
+                <p>description</p>
+            </div>
+            <div>Adem Ladouani
+                <p>description</p>
+            </div>
+            <div>Marc Ntila Dekeuka
+                <p>description</p>
+            </div>
+            <div>Wei Bin Fan
+                <p>description</p>
+            </div>
+          </div>
+      </section>
+
+  </body>
+  </html>
 {% endblock %}
