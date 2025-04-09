@@ -2,7 +2,6 @@
 {% block content %}
 <style>
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -12,13 +11,6 @@ body {
   .logo {
     font-size: 24px;
     font-weight: bold;
-  }
-  
-  nav a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 18px;
   }
   
   .app {
@@ -48,21 +40,6 @@ body {
     width: 200px;
     text-align: center;
   }
-  .simulateur-btn {
-            background-color: #007bff;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-bottom: 30px;
-        }
-
-        .simulateur-btn:hover {
-            background-color: #0056b3;
-        }
   </style>
   
   <body>
@@ -74,22 +51,30 @@ body {
       <section class="Simulateur">
           <h2>Notre simulateur</h2>
           <a href="http://127.0.0.1:8000/simulation/">
-            <button class="simulateur-btn">Simulateur</button>
+              <img src="../static/play.png" alt="simulateur" style="width:200px;height:200px;">
         </a>
       </section>
       <section class="equipe">
           <h2>Collaborateurs</h2>
           <div class="membres">
-            <div>Abdelmadjid Ammour
+            <div>
+              <img src="../static/image.png" alt="personne">
+              Abdelmadjid Ammour
                 <p>description</p>
             </div>
-            <div>Adem Ladouani
+            <div>
+              <img src="../static/image.png" alt="personne">
+              Adem Ladouani
                 <p>description</p>
             </div>
-            <div>Marc Ntila Dekeuka
+            <div>
+              <img src="../static/image.png" alt="personne">
+              Marc Ntila Dekeuka
                 <p>description</p>
             </div>
-            <div>Wei Bin Fan
+            <div>
+              <img src="../static/image.png" alt="personne">
+              Wei Bin Fan
                 <p>description</p>
             </div>
           </div>
