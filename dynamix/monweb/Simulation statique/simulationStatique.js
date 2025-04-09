@@ -78,8 +78,3 @@ Runner.run(runner, engine);  // Lancer le runner
 
 // Démarrer le rendu
 Render.run(render);
-
-
-
-
-
