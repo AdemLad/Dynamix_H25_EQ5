@@ -12,4 +12,6 @@ def simulations(request) :
 def pendule(request) : 
    return render(request, "pendule.html")
 
+def simulateurStatique(request) : 
+   return render(request, "statique2.html")
 
