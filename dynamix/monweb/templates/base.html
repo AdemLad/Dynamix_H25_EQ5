@@ -9,7 +9,7 @@
       {% endblock %}
     </title>
     <style>
-      body {
+      bodyBase {
 	margin: 0;
 	background: #ffffff;
 	font-family: 'Work Sans', sans-serif;
@@ -17,12 +17,12 @@
 }
 
 .container {
-	width: 80%;
+	width: 90%;
 	margin: 0 auto;
 }
 
 header {
-  background: #7fe3f5;
+  background: #f8f8f8;
 }
 
 header::after {
@@ -50,7 +50,7 @@ nav ul {
 nav li {
   display: inline-block;
   margin-left: 70px;
-  padding-top: 23px;
+  padding-top: 25px;
 
   position: relative;
 }
@@ -83,7 +83,7 @@ nav a:hover::before {
   width: 100%;
 }
  </style>
-
+<bodyBase>
       </head>
       <header>
         <div class="container">
@@ -93,8 +93,7 @@ nav a:hover::before {
             <ul>
               <li><a href="http://127.0.0.1:8000/">Home</a></li>
               <li><a href="http://127.0.0.1:8000/simulations/">Simulations</a></li>
-              <li><a href="#">Simulateur Statique</a></li>
-              <li><a href="#">Simulateur Cinétique</a></li>
+              <li><a href="http://127.0.0.1:8000/simulation/statique/">Simulateur Statique</a></li>
             </ul>
           </nav>
         </div>
@@ -106,136 +105,12 @@ nav a:hover::before {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js" integrity="sha512-6+7rTBmR6pRFe9fa0vCFjFaHZj/XYa7774bEBzRtxgdpIJOS++R3cKd6Prg/eJmxtsJotd8KAg4g57uuVQsZKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" ></script>
-    <script defer type="text/javascript" src= "../simulation/pendule.js"></script>
+    <script defer type="link/javascript" src= "../simulation/pendule.js"></script>
     
     <script>
       var isRunning = false;
-      lancementPendule = document.getElementById("pendule")
-      lancementPendule.addEventListener("click",function(){
-
-        if (isRunning) return; // If the simulation is already running, do nothing
-
-        isRunning = true;
-
-        var Engine = Matter.Engine,
-          Render = Matter.Render,
-          Runner = Matter.Runner,
-          Bodies = Matter.Bodies,
-          Composite = Matter.Composite,
-          Constraint = Matter.Constraint,
-          MouseConstraint = Matter.MouseConstraint,
-          Mouse = Matter.Mouse,
-          Body = Matter.Body;
-
-            // Création de l'engine et du monde
-            var engine = Engine.create();
-            var world = engine.world;
-
-            // Création du rendu
-            var render = Render.create({
-              element: document.getElementById("render-container"),
-                engine: engine,
-                options: {
-                    width: 800,
-                    height: 600,
-                    wireframes: false
-                }
-            });
-
-            Render.run(render);
-
-            // Création du moteur physique
-            var runner = Runner.create();
-            Runner.run(runner, engine);
-
-            // Point d'attache du pendule
-            var pivot = Bodies.circle(400, 100, 10, { isStatic: true, render: { fillStyle: "black" } });
-
-            // Variables pour le pendule
-            var pendulumRadius = 30;
-            var pendulumMass = 1;
-
-            // Création du pendule (initial)
-            var pendulum = Bodies.circle(400, 300, pendulumRadius, { 
-                mass: pendulumMass, 
-                friction: 0, 
-                inertia: Infinity, 
-                render: { fillStyle: "blue" } 
-            });
-
-            // Liaison entre le pivot et le pendule
-            var rod = Constraint.create({
-                bodyA: pivot,
-                bodyB: pendulum,
-                length: 200,
-                stiffness: 1,
-                damping: 0,
-                render: { strokeStyle: "black", lineWidth: 3 }
-            });
-
-            // Ajout des objets au monde
-            Composite.add(world, [pivot, pendulum, rod]);
-
-            // Ajout du contrôle souris
-            var mouse = Mouse.create(render.canvas);
-            var mouseConstraint = MouseConstraint.create(engine, {
-                mouse: mouse,
-                constraint: {
-                    angularStiffness: 0,
-                    render: { visible: false }
-                }
-            });
-
-            Composite.add(world, mouseConstraint);
-            render.mouse = mouse;
-
-            // Fonction pour réinitialiser le pendule
-            function resetPendulum() {
-                Body.setPosition(pendulum, { x: 400, y: 300 });
-                Body.setVelocity(pendulum, { x: 0, y: 0 });
-                Body.setAngularVelocity(pendulum, 0);
-            }
-
-            // Fonction pour mettre à jour le pendule
-            function updatePendulum() {
-                // Récupérer les nouvelles valeurs
-                var newRadius = parseFloat(document.getElementById("radius").value);
-                var newMass = parseFloat(document.getElementById("mass").value);
-
-                // Vérification des entrées utilisateur
-                if (isNaN(newRadius) || newRadius <= 0) newRadius = 30;
-                if (isNaN(newMass) || newMass <= 0) newMass = 1;
-
-                // Supprimer l'ancien pendule et sa liaison
-                Composite.remove(world, [pendulum, rod]);
-
-                // Créer un nouveau pendule avec les nouvelles valeurs
-                pendulum = Bodies.circle(400, 300, newRadius, { 
-                    mass: newMass, 
-                    friction: 0, 
-                    inertia: Infinity, 
-                    render: { fillStyle: "blue" } 
-                });
-
-                // Nouvelle liaison
-                rod = Constraint.create({
-                    bodyA: pivot,
-                    bodyB: pendulum,
-                    length: 200,
-                    stiffness: 1,
-                    damping: 0,
-                    render: { strokeStyle: "black", lineWidth: 3 }
-                });
-
-                // Ajouter le nouveau pendule au monde
-                Composite.add(world, [pendulum, rod]);
-
-                // Réinitialiser la position
-                resetPendulum();
-            }
-      })
+      
   </script>
-  </body>
+  </bodyBase>
 </html>
  
