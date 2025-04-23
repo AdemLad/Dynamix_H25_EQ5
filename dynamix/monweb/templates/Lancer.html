@@ -115,6 +115,22 @@
       <button onclick="updateObject()">Mettre à jour</button>
     </div>
   </div>
+
+  <div id="velocityDisplay" style="
+  position: absolute;
+  right: 30px;
+  top: 150px;
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+">
+  <div><strong>Vitesse X :</strong> <span id="vx">0</span> px/s</div>
+  <div><strong>Vitesse Y :</strong> <span id="vy">0</span> px/s</div>
+</div>
+
 <script>
     var Engine = Matter.Engine,
             Render = Matter.Render,
@@ -230,6 +246,15 @@
 
         Body.applyForce(projectile, projectile.position, { x: forceX, y: forceY });
     }
+
+    (function updateVelocityDisplay() {
+    Matter.Events.on(engine, 'afterUpdate', function () {
+        if (projectile) {
+            document.getElementById("vx").textContent = projectile.velocity.x.toFixed(2);
+            document.getElementById("vy").textContent = projectile.velocity.y.toFixed(2);
+        }
+    });
+})();
 
  
         // Fonction pour réinitialiser le projectile
