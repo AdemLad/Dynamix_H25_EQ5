@@ -151,7 +151,7 @@
         Runner.run(runner, engine);
  
         // Création du sol
-        var ground = Bodies.rectangle(800, 580, 6000, 60, {
+        var ground = Bodies.rectangle(800, 580, 60000, 60, {
             isStatic: true,
             render: { fillStyle: '#654321' } // Couleur marron pour un sol visible
         });
@@ -193,11 +193,11 @@
                 Render.lookAt(render, {
                     min: {
                         x: projectile.position.x - 400,
-                        y: projectile.position.y - 300
+                        y: projectile.position.y - 500
                     },
                     max: {
                         x: projectile.position.x + 400,
-                        y: projectile.position.y + 300
+                        y: projectile.position.y + 100
                     }
                 });
             }
