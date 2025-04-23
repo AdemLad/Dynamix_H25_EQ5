@@ -1,52 +1,304 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulation de lancer</title>
-    <script type="text/javascript" src="../simulation/matter.js"></script>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        canvas {
-            background: #f4f4f4;
-            margin-top: 10px;
-        }
-        .controls {
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collision de Deux Objets</title>
+  <script type="text/javascript" src="../simulation/matter.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: 1.8rem;
+      color: #333;
+    }
+    canvas {
+      background: linear-gradient(to bottom, #b3d4fc, #7e69f1);
+      box-shadow: 0 0 20px rgba(48, 98, 233, 0.1);
+      margin: 20px 0;
+      border: 2px solid #ccc;
+    }
+    .controls {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      max-width: 800px;
+    }
+    label {
+      font-weight: bold;
+      color: #444;
+    }
+    input {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 80px;
+    }
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  </style>
 </head>
 <body>
-    <script defer type="text/javascript" src="../simulation/collisions.js"></script>
-    <div class="controls">
-        <label for="forceA">Force A :</label>
-        <input type="number" id="forceA" value="0.02" step="0.01">
-        <label for="angleA">Angle A (°) :</label>
-        <input type="number" id="angleA" value="45" step="1">
-
-        <label for="forceB">Force B :</label>
-        <input type="number" id="forceB" value="0.02" step="0.01">
-        <label for="angleB">Angle B (°) :</label>
-        <input type="number" id="angleB" value="45" step="1">
-
-        <label for="massA">Masse A :</label>
-        <input type="number" id="massA" value="5" step="0.1">
-        <label for="rayonA">Rayon A :</label>
-        <input type="number" id="rayonA" value="20" step="1">
-
-        <label for="massB">Masse B :</label>
-        <input type="number" id="massB" value="5" step="0.1">
-        <label for="rayonB">Rayon B :</label>
-        <input type="number" id="rayonB" value="20" step="1">
-
-        <button onclick="applyForces()">Lancer</button>
-        <button onclick="resetObjects()">Réinitialiser</button>
-        <button onclick="updateObjets()">Mettre à jour</button>
+  <h1>Simulation de Collision</h1>
+  <div class="controls">
+    <div class="control-group">
+      <label for="forceA">Force A (N)</label>
+      <input type="number" id="forceA" value="0.02" step="0.01">
     </div>
+    <div class="control-group">
+      <label for="angleA">Angle A (°)</label>
+      <input type="number" id="angleA" value="45" step="1">
+    </div>
+    <div class="control-group">
+      <label for="massA">Masse A (kg)</label>
+      <input type="number" id="massA" value="5" step="0.1">
+    </div>
+    <div class="control-group">
+      <label for="rayonA">Rayon A (px)</label>
+      <input type="number" id="rayonA" value="20" step="1">
+    </div>
+    <div class="control-group">
+      <label for="forceB">Force B (N)</label>
+      <input type="number" id="forceB" value="0.02" step="0.01">
+    </div>
+    <div class="control-group">
+      <label for="angleB">Angle B (°)</label>
+      <input type="number" id="angleB" value="45" step="1">
+    </div>
+    <div class="control-group">
+      <label for="massB">Masse B (kg)</label>
+      <input type="number" id="massB" value="5" step="0.1">
+    </div>
+    <div class="control-group">
+      <label for="rayonB">Rayon B (px)</label>
+      <input type="number" id="rayonB" value="20" step="1">
+    </div>
+    <div class="control-group" style="flex-direction: row; gap: 10px; margin-top: 10px;">
+      <button onclick="applyForces()">Lancer</button>
+      <button onclick="resetObjects()">Réinitialiser</button>
+      <button onclick="updateObjects()">Mettre à jour</button>
+    </div>
+    <!-- Affichage des vitesses et vecteurs -->
+<div id="velocityDisplayA" style="
+position: absolute;
+right: 30px;
+top: 80px;
+background: white;
+padding: 16px;
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+font-family: 'Roboto', sans-serif;
+color: #333;
+">
+<strong>Balle A</strong>
+<div>Vx : <span id="vxA">0</span> px/s</div>
+<div>Vy : <span id="vyA">0</span> px/s</div>
+<canvas id="vectorCanvasA" width="100" height="100" style="margin-top: 10px;"></canvas>
+</div>
 
+<div id="velocityDisplayB" style="
+position: absolute;
+right: 30px;
+top: 230px;
+background: white;
+padding: 16px;
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+font-family: 'Roboto', sans-serif;
+color: #333;
+">
+<strong>Balle B</strong>
+<div>Vx : <span id="vxB">0</span> px/s</div>
+<div>Vy : <span id="vyB">0</span> px/s</div>
+<canvas id="vectorCanvasB" width="100" height="100" style="margin-top: 10px;"></canvas>
+</div>
+
+  </div>
+  <script>
+    var Engine = Matter.Engine,
+        Render = Matter.Render,
+        Runner = Matter.Runner,
+        Bodies = Matter.Bodies,
+        Composite = Matter.Composite,
+        Body = Matter.Body;
+
+    var engine = Engine.create();
+    var world = engine.world;
+    world.gravity.y = 0;
+
+    var render = Render.create({
+      element: document.body,
+      engine: engine,
+      options: {
+        width: 800,
+        height: 600,
+        wireframes: false
+      }
+    });
+
+    var ground = Bodies.rectangle(400, 580, 810, 40, {
+      isStatic: true,
+      render: { fillStyle: '#654321' }
+    });
+
+    var boxA, boxB;
+    function createObjects() {
+      var massA = parseFloat(document.getElementById("massA").value);
+      var radiusA = parseFloat(document.getElementById("rayonA").value);
+      var massB = parseFloat(document.getElementById("massB").value);
+      var radiusB = parseFloat(document.getElementById("rayonB").value);
+
+      boxA = Bodies.circle(150, 500, radiusA, {
+        mass: massA,
+        restitution: 0.8,
+        density: 0.005,
+        friction: 0,
+        frictionAir: 0,
+        frictionStatic: 0,
+        render: { fillStyle: 'red' }
+      });
+
+      boxB = Bodies.circle(650, 500, radiusB, {
+        mass: massB,
+        restitution: 0.8,
+        density: 0.005,
+        friction: 0,
+        frictionAir: 0,
+        frictionStatic: 0,
+        render: { fillStyle: 'blue' }
+      });
+
+      Composite.add(world, [boxA, boxB]);
+    }
+
+    createObjects();
+    Composite.add(world, ground);
+
+    function updateObjects() {
+      Composite.remove(world, [boxA, boxB]);
+      createObjects();
+      resetObjects();
+    }
+
+    // Sélection des éléments DOM
+const vxA = document.getElementById("vxA");
+const vyA = document.getElementById("vyA");
+const vxB = document.getElementById("vxB");
+const vyB = document.getElementById("vyB");
+
+const vectorCanvasA = document.getElementById("vectorCanvasA");
+const ctxA = vectorCanvasA.getContext("2d");
+
+const vectorCanvasB = document.getElementById("vectorCanvasB");
+const ctxB = vectorCanvasB.getContext("2d");
+
+Matter.Events.on(engine, 'afterUpdate', function () {
+    // Met à jour les vitesses
+    vxA.textContent = boxA.velocity.x.toFixed(2);
+    vyA.textContent = boxA.velocity.y.toFixed(2);
+    vxB.textContent = boxB.velocity.x.toFixed(2);
+    vyB.textContent = boxB.velocity.y.toFixed(2);
+
+    // Dessin vecteur vitesse A
+    drawVector(ctxA, boxA.velocity.x, boxA.velocity.y);
+
+    // Dessin vecteur vitesse B
+    drawVector(ctxB, boxB.velocity.x, boxB.velocity.y);
+});
+
+function drawVector(ctx, vx, vy) {
+    const scale = 5;
+    const centerX = 50;
+    const centerY = 50;
+    const endX = centerX + vx * scale;
+    const endY = centerY + vy * scale;
+
+    ctx.clearRect(0, 0, 100, 100);
+
+    // Ligne principale
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(endX, endY);
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Tête de flèche
+    const angle = Math.atan2(endY - centerY, endX - centerX);
+    const headLength = 8;
+    ctx.beginPath();
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(endX - headLength * Math.cos(angle - Math.PI / 6), endY - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(endX - headLength * Math.cos(angle + Math.PI / 6), endY - headLength * Math.sin(angle + Math.PI / 6));
+    ctx.lineTo(endX, endY);
+    ctx.fillStyle = 'blue';
+    ctx.fill();
+}
+
+
+    function applyForces() {
+      applyForceA();
+      applyForceB();
+    }
+
+    function applyForceA() {
+      var forceA = parseFloat(document.getElementById("forceA").value);
+      var angleA = parseFloat(document.getElementById("angleA").value) * (Math.PI / 180);
+      var forceXA = forceA * Math.cos(angleA);
+      var forceYA = -forceA * Math.sin(angleA);
+      Body.applyForce(boxA, boxA.position, { x: forceXA, y: forceYA });
+    }
+
+    function applyForceB() {
+      var forceB = parseFloat(document.getElementById("forceB").value);
+      var angleB = parseFloat(document.getElementById("angleB").value) * (Math.PI / 180);
+      var forceXB = forceB * Math.cos(angleB);
+      var forceYB = -forceB * Math.sin(angleB);
+      Body.applyForce(boxB, boxB.position, { x: forceXB, y: forceYB });
+    }
+
+    function resetObjects() {
+      Body.setPosition(boxA, { x: 150, y: 500 });
+      Body.setVelocity(boxA, { x: 0, y: 0 });
+      Body.setAngularVelocity(boxA, 0);
+
+      Body.setPosition(boxB, { x: 650, y: 500 });
+      Body.setVelocity(boxB, { x: 0, y: 0 });
+      Body.setAngularVelocity(boxB, 0);
+    }
+
+    Render.run(render);
+    var runner = Runner.create();
+    Runner.run(runner, engine);
+  </script>
 </body>
 </html>
