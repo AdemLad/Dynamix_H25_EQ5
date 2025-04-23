@@ -2,24 +2,309 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulation Matter.js</title>
+  <title>Simulateur Physique</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+ 
+    body {
+      display: flex;
+    }
+ 
+    #left-menu {
+      width: 16vw;
+      background-color: #f2f2f2;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #cccccc;
+      box-sizing: border-box;
+    }
+ 
+    #toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+ 
+    .tool-btn {
+      padding: 8px;
+      background-color: #e0e0e0;
+      border: none;
+      cursor: pointer;
+    }
+ 
+    #object-list {
+      flex: 1;
+      overflow-y: auto;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+ 
+    .object-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+ 
+    #param-menu {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 15.5vw;
+      height: 100%;
+      background-color: #ffffff;
+      border-left: 1px solid #ccc;
+      padding: 15px;
+      box-sizing: border-box;
+      display: none;
+      flex-direction: column;
+      z-index: 10;
+    }
+ 
+    #param-menu h3 {
+      margin-top: 0;
+    }
+ 
+    #param-menu label {
+      margin: 10px 0 5px;
+    }
+ 
+    #param-menu input {
+      width: 100%;
+      padding: 5px;
+    }
+ 
+    #param-menu button {
+      margin-top: 15px;
+      padding: 8px;
+      cursor: pointer;
+    }
+ 
+    #main-canvas {
+      width: flex;
+      height: flex;
+      position: relative;
+      overflow: hidden;
+      background-color: #00ff2a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+ 
     canvas {
-      border: 1px solid rgb(204, 38, 38);
+      display: block;
+      background-color: #8a0505;
     }
   </style>
-  <link rel="stylesheet" href="../fichier css/simulationStatiqueCss.css">
 </head>
 <body>
+  <div id="left-menu">
+    <div id="toolbar">
+      <button class="tool-btn" onclick="toggleParamMenu('bloc')">Ajouter Bloc</button>
+      <button class="tool-btn" onclick="toggleParamMenu('ressort')">Ajouter Ressort</button>
+      <button class="tool-btn" onclick="toggleParamMenu('plan')">Ajouter Plan</button>
+    </div>
+    <div id="object-list"></div>
+  </div>
 
+  <div id="main-canvas"></div>
 
-    <button onclick="handleClick()" id="monBouton">Cliquez ici</button>
+  <div id="param-menu"></div>
 
-  <!-- Inclusion de Matter.js via un CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/matter-js"></script>
-  
-  <!-- Inclusion de ton fichier JavaScript local -->
-  <script src="../Simulation%20statique/simulationStatique.js"></script>
+  <script>
+    const { Engine, Render, World, Bodies, Composite, Runner, Mouse, MouseConstraint, Constraint, Body, Events } = Matter;
+
+    const engine = Engine.create();
+    const world = engine.world;
+    engine.gravity.y = 1;
+
+    const objectList = [];
+
+    const canvasWidth = 75/100 * window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    const render = Render.create({
+      element: document.getElementById('main-canvas'),
+      engine: engine,
+      options: {
+        width: canvasWidth,
+        height: canvasHeight,
+        wireframes: false,
+        background: '#d6eaf8',
+        pixelRatio: window.devicePixelRatio,
+      }
+    });
+
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: { stiffness: 0.2, render: { visible: false } }
+    });
+
+    Composite.add(world, mouseConstraint);
+    render.mouse = mouse;
+    mouse.pixelRatio = render.options.pixelRatio;
+
+    // ➕ Ajout des événements pour déplacer le plan avec la souris
+    Events.on(mouseConstraint, "startdrag", function(event) {
+      if (event.body && event.body.label.startsWith("Plan")) {
+        Body.setStatic(event.body, false);
+      }
+    });
+
+    Events.on(mouseConstraint, "enddrag", function(event) {
+      if (event.body && event.body.label.startsWith("Plan")) {
+        Body.setVelocity(event.body, { x: 0, y: 0 });
+        Body.setAngularVelocity(event.body, 0);
+        Body.setStatic(event.body, true);
+      }
+    });
+
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+    Render.run(render);
+
+    Render.lookAt(render, {
+      min: { x: 0, y: 0 },
+      max: { x: canvasWidth, y: canvasHeight }
+    });
+
+    const borders = [
+      Bodies.rectangle(canvasWidth / 2, canvasHeight - 10, canvasWidth, 20, { isStatic: true }),
+      Bodies.rectangle(10, canvasHeight / 2, 20, canvasHeight, { isStatic: true }),
+      Bodies.rectangle(canvasWidth - 10, canvasHeight / 2, 20, canvasHeight, { isStatic: true }),
+      Bodies.rectangle(canvasWidth / 2, 10, canvasWidth, 20, { isStatic: true })
+    ];
+    World.add(world, borders);
+
+    function updateObjectList() {
+      const list = document.getElementById("object-list");
+      list.innerHTML = "";
+      objectList.forEach((obj, i) => {
+        const div = document.createElement("div");
+        div.className = "object-item";
+        div.innerHTML = `
+          <span>${obj.label}</span>
+          <button onclick="removeObject(${i})">❌</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function removeObject(index) {
+      World.remove(world, objectList[index]);
+      objectList.splice(index, 1);
+      updateObjectList();
+    }
+
+    function toggleParamMenu(type) {
+      const menu = document.getElementById("param-menu");
+      if (menu.dataset.type === type) {
+        menu.style.display = "none";
+        menu.innerHTML = "";
+        menu.dataset.type = "";
+        return;
+      }
+
+      menu.dataset.type = type;
+      menu.style.display = "flex";
+      menu.innerHTML = "";
+
+      if (type === "bloc") {
+        menu.innerHTML = `
+          <h3>Paramètres du Bloc</h3>
+          <label>Largeur</label><input id="bloc-w" value="80" type="number" />
+          <label>Hauteur</label><input id="bloc-h" value="80" type="number" />
+          <label>Masse</label><input id="bloc-m" value="1" type="number" />
+          <button onclick="addBloc()">Ajouter au monde</button>
+        `;
+      } else if (type === "ressort") {
+        menu.innerHTML = `
+          <h3>Paramètres du Ressort</h3>
+          <label>Raideur</label><input id="spring-k" value="0.05" type="number" step="0.01"/>
+          <label>Amortissement</label><input id="spring-d" value="0.1" type="number" step="0.01"/>
+          <button onclick="addRessort()">Ajouter au monde</button>
+        `;
+      } else if (type === "plan") {
+        menu.innerHTML = `
+          <h3>Paramètres du Plan Incliné</h3>
+          <label>Longueur</label><input id="plan-l" value="200" type="number" />
+          <label>Angle (°)</label><input id="plan-a" value="30" type="number" />
+          <label>Position X</label><input id="plan-x" value="600" type="number" />
+          <label>Position Y</label><input id="plan-y" value="500" type="number" />
+          <button onclick="addPlan()">Ajouter au monde</button>
+        `;
+      }
+    }
+
+    function addBloc() {
+      const w = parseFloat(document.getElementById("bloc-w").value);
+      const h = parseFloat(document.getElementById("bloc-h").value);
+      const mass = parseFloat(document.getElementById("bloc-m").value);
+
+      const bloc = Bodies.rectangle(400, 200, w, h, {
+        restitution: 0.2,
+        friction: 0.5,
+        density: 0.001,
+        label: `Bloc ${objectList.length + 1}`
+      });
+      Body.setMass(bloc, mass);
+      World.add(world, bloc);
+      objectList.push(bloc);
+      updateObjectList();
+    }
+
+    function addRessort() {
+      const stiffness = parseFloat(document.getElementById("spring-k").value);
+      const damping = parseFloat(document.getElementById("spring-d").value);
+      const pointA = { x: 400, y: 100 };
+      const circle = Bodies.circle(400, 200, 10, { mass: 0.5 });
+      const spring = Constraint.create({
+        pointA,
+        bodyB: circle,
+        stiffness,
+        damping,
+        label: `Ressort ${objectList.length + 1}`
+      });
+      World.add(world, [circle, spring]);
+      objectList.push(circle);
+      updateObjectList();
+    }
+
+    function addPlan() {
+      const longueur = parseFloat(document.getElementById("plan-l").value);
+      const angleDeg = parseFloat(document.getElementById("plan-a").value);
+      const angleRad = angleDeg * Math.PI / 180;
+      const posX = parseFloat(document.getElementById("plan-x").value);
+      const posY = parseFloat(document.getElementById("plan-y").value);
+
+      const plan = Bodies.rectangle(posX, posY, longueur, 20, {
+        angle: -angleRad,
+        inertia: Infinity,
+        friction: 0.5,
+        label: `Plan ${objectList.length + 1}`
+      });
+
+      // Désactiver la gravité
+      plan.plugin = {
+        attractors: [
+          () => ({ x: 0, y: 0 })
+        ]
+      };
+
+      World.add(world, plan);
+      objectList.push(plan);
+      updateObjectList();
+    }
+  </script>
 </body>
 </html>
