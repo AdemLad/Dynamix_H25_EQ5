@@ -29,6 +29,8 @@ Render.run(render);
 var runner = Runner.create();
 Runner.run(runner, engine);
 
+
+
 // Point d'attache du pendule
 var pivot = Bodies.circle(400, 100, 10, { isStatic: true, render: { fillStyle: "black" } });
 
@@ -50,7 +52,7 @@ var rod = Constraint.create({
     bodyB: pendulum,
     length: 200,
     stiffness: 1,
-    damping: 0,
+    damping: 0, // Pas de friction dans la contrainte
     render: { strokeStyle: "black", lineWidth: 3 }
 });
 
@@ -94,6 +96,7 @@ function updatePendulum() {
     pendulum = Bodies.circle(400, 300, newRadius, { 
         mass: newMass, 
         friction: 0, 
+        frictionAir: 0, 
         inertia: Infinity, 
         render: { fillStyle: "blue" } 
     });
@@ -104,13 +107,13 @@ function updatePendulum() {
         bodyB: pendulum,
         length: 200,
         stiffness: 1,
-        damping: 0,
+        damping: 0, 
         render: { strokeStyle: "black", lineWidth: 3 }
     });
 
     // Ajouter le nouveau pendule au monde
     Composite.add(world, [pendulum, rod]);
 
-    // Réinitialiser la position
+    // Réinitialiser la position et vitesse
     resetPendulum();
 }

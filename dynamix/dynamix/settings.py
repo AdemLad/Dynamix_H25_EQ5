@@ -118,6 +118,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'monweb' / 'static',     # Your CSS, images, etc.
+    BASE_DIR / 'monweb' / 'simulation'  # This adds your JS folder!
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
