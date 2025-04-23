@@ -1,6 +1,6 @@
 /* pendule.css */
 
-.bodyPendule {
+body {
     font-family: 'Roboto', sans-serif;
     background: #f0f2f5;
     margin: 0;
@@ -14,7 +14,7 @@
     margin-top: 0px;
     font-size: 1.8rem;
     color: #333;
-  }
+  }   
   
   canvas {
     background: linear-gradient(to bottom, #b3d4fc, #7e69f1);
