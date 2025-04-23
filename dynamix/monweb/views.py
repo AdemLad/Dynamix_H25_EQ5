@@ -6,7 +6,10 @@ from django.shortcuts import render, HttpResponse
 def home(request) : 
     return render(request, "home.html")
 
-def simulation(request) : 
-   return render(request, "simulation.html")
+def simulations(request) : 
+   return render(request, "simulations.html")
+
+def pendule(request) : 
+   return render(request, "pendule.html")
 
 
