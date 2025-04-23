@@ -9,6 +9,16 @@
       {% endblock %}
     </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"  rel="stylesheet" />
+    <style>
+      /* Container for the render */
+      #render-container {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 800px;
+        height: 600px;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -56,7 +66,7 @@
 
             // Création du rendu
             var render = Render.create({
-                element: document.body,
+              element: document.getElementById("render-container"),
                 engine: engine,
                 options: {
                     width: 800,
