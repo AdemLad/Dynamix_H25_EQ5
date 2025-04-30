@@ -7,7 +7,7 @@
   <script type="text/javascript" src="../simulation/matter.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    bodyCollisions {
       font-family: 'Roboto', sans-serif;
       background: #f0f2f5;
       margin: 0;
@@ -67,7 +67,7 @@
     }
   </style>
 </head>
-<body>
+<bodyCollisions>
   <h1>Simulation de Collision</h1>
   <div class="controls">
     <div class="control-group">
@@ -300,6 +300,6 @@ function drawVector(ctx, vx, vy) {
     var runner = Runner.create();
     Runner.run(runner, engine);
   </script>
-</body>
+</bodyCollisions>
 </html>
 {% endblock %}
