@@ -10,6 +10,9 @@ urlpatterns = [
     path("simulation/statique/", views.simulateurStatique, name="simulateur statique"),
 
     path("simulation/pendule/", views.pendule, name="pendule"),
+    path("simulation/lancer/", views.lancer, name="lancer"),
+    path("simulation/collisions/", views.collisions, name="collisions"),
+
     
 ]
     

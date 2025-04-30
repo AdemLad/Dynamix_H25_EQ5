@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends "base.html" %} {% block title %} Home Page {% endblock %}
+{% block content %}
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -339,3 +339,4 @@ Matter.Events.on(engine, 'afterUpdate', function () {
 </script>
 </body>
 </html>
+{% endblock %}
