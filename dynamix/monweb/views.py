@@ -22,3 +22,15 @@ def lancer(request) :
 
 def collisions(request) : 
    return render(request, "collisions.html")
+
+def frottement(request) : 
+   return render(request, "frottement.html")
+
+def poulie(request) : 
+   return render(request, "poulie.html")
+
+def densite(request) : 
+   return render(request, "densite.html")
+
+def gravite(request) : 
+   return render(request, "gravite.html")

@@ -12,6 +12,10 @@ urlpatterns = [
     path("simulation/pendule/", views.pendule, name="pendule"),
     path("simulation/lancer/", views.lancer, name="lancer"),
     path("simulation/collisions/", views.collisions, name="collisions"),
+    path("simulation/frottement/", views.frottement, name="frottement"),
+    path("simulation/poulie/", views.poulie, name="poulie"),
+    path("simulation/densite/", views.densite, name="densite"),
+    path("simulation/gavete/", views.gravite, name="gravite"),
 
     
 ]
