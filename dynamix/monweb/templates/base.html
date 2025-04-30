@@ -1,117 +1,116 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      {% block title %}
-        Dynamix
-      {% endblock %}
-    </title>
-    <style>
-      bodyBase {
-	margin: 0;
-	background: #ffffff;
-	font-family: 'Work Sans', sans-serif;
-	font-weight: 800;
-}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Dynamix{% endblock %}</title>
+  <style>
 
-.container {
-	width: 90%;
-	margin: 0 auto;
-}
+    main {
+      display: flex;
+      flex-direction: row;
+      height: calc(100vh - 80px); /* pleine hauteur - hauteur du header */
+    }
 
-header {
-  background: #f8f8f8;
-}
+    body {
+      margin: 0;
+      background: #ffffff;
+      font-family: 'Work Sans', sans-serif;
+      font-weight: 800;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-header::after {
-  content: '';
-  display: table;
-  clear: both;
-}
+    .container {
+      width: 90%;
+      margin: 0 auto;
+    }
 
-.logo {
-  float: left;
-  padding: 10px 0;
-  font-weight: bold;
-}
+    header {
+      background: #f8f8f8;
+    }
 
-nav {
-  float: right;
-}
+    header::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
 
-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+    .logo {
+      float: left;
+      padding: 10px 0;
+      font-weight: bold;
+    }
 
-nav li {
-  display: inline-block;
-  margin-left: 70px;
-  padding-top: 25px;
+    nav {
+      float: right;
+    }
 
-  position: relative;
-}
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
 
-nav a {
-  color: #444;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 14px;
-}
+    nav li {
+      display: inline-block;
+      margin-left: 70px;
+      padding-top: 25px;
+      position: relative;
+    }
 
-nav a:hover {
-  color: #000;
-}
+    nav a {
+      color: #444;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
 
-nav a::before {
-  content: '';
-  display: block;
-  height: 5px;
-  background-color: #444;
+    nav a:hover {
+      color: #000;
+    }
 
-  position: absolute;
-  top: 0;
-  width: 0%;
+    nav a::before {
+      content: '';
+      display: block;
+      height: 5px;
+      background-color: #444;
+      position: absolute;
+      top: 0;
+      width: 0%;
+      transition: all ease-in-out 250ms;
+    }
 
-  transition: all ease-in-out 250ms;
-}
+    nav a:hover::before {
+      width: 100%;
+    }
 
-nav a:hover::before {
-  width: 100%;
-}
- </style>
-<bodyBase>
-      </head>
-      <header>
-        <div class="container">
-          <h1 class="logo" style="font-size:30px">Dynamix</h1>
-    
-          <nav>
-            <ul>
-              <li><a href="http://127.0.0.1:8000/">Home</a></li>
-              <li><a href="http://127.0.0.1:8000/simulations/">Simulations</a></li>
-              <li><a href="http://127.0.0.1:8000/simulation/statique/">Simulateur Statique</a></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-    </bodyBase>
+    main {
+      flex: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1 class="logo" style="font-size:30px">Dynamix</h1>
+      <nav>
+        <ul>
+          <li><a href="http://127.0.0.1:8000/">Home</a></li>
+          <li><a href="http://127.0.0.1:8000/simulations/">Simulations</a></li>
+          <li><a href="http://127.0.0.1:8000/simulation/statique/">Simulateur Statique</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-      </html>
-      
-    {% block content %} {% endblock %}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js" integrity="sha512-6+7rTBmR6pRFe9fa0vCFjFaHZj/XYa7774bEBzRtxgdpIJOS++R3cKd6Prg/eJmxtsJotd8KAg4g57uuVQsZKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script defer type="link/javascript" src= "../simulation/pendule.js"></script>
-    
-    <script>
-      var isRunning = false;
-      
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+</body>
 </html>
- 

@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block title %} Home Page {% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
 {% block content %}
 <html lang="fr">
 <head>
@@ -6,18 +9,14 @@
   <title>Simulateur Physique</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <style>
-    html, body2 {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
     }
- 
-    body2 {
-      display: flex;
-    }
- 
+
     #left-menu {
       width: 16vw;
       background-color: #f2f2f2;
@@ -27,35 +26,35 @@
       border-right: 1px solid #cccccc;
       box-sizing: border-box;
     }
- 
+
     #toolbar {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
- 
+
     .tool-btn {
       padding: 8px;
       background-color: #e0e0e0;
       border: none;
       cursor: pointer;
     }
- 
+
     #object-list {
       flex: 1;
       overflow-y: auto;
       border-top: 1px solid #ccc;
       padding-top: 10px;
     }
- 
+
     .object-item {
       display: flex;
       justify-content: space-between;
       margin-bottom: 6px;
       font-size: 14px;
     }
- 
+
     #param-menu {
       position: absolute;
       right: 0;
@@ -70,29 +69,9 @@
       flex-direction: column;
       z-index: 10;
     }
- 
-    #param-menu h3 {
-      margin-top: 0;
-    }
- 
-    #param-menu label {
-      margin: 10px 0 5px;
-    }
- 
-    #param-menu input {
-      width: 100%;
-      padding: 5px;
-    }
- 
-    #param-menu button {
-      margin-top: 15px;
-      padding: 8px;
-      cursor: pointer;
-    }
- 
+
     #main-canvas {
-      width: flex;
-      height: flex;
+      flex-grow: 1;
       position: relative;
       overflow: hidden;
       background-color: #00ff2a;
@@ -100,14 +79,13 @@
       align-items: center;
       justify-content: center;
     }
- 
+
     canvas {
       display: block;
-      background-color: #8a0505;
     }
   </style>
 </head>
-<body2>
+<body>
   <div id="left-menu">
     <div id="toolbar">
       <button class="tool-btn" onclick="toggleParamMenu('bloc')">Ajouter Bloc</button>
@@ -116,23 +94,23 @@
     </div>
     <div id="object-list"></div>
   </div>
- 
+
   <div id="main-canvas"></div>
- 
+
   <div id="param-menu"></div>
- 
+
   <script>
     const { Engine, Render, World, Bodies, Composite, Runner, Mouse, MouseConstraint, Constraint, Body } = Matter;
- 
+
     const engine = Engine.create();
     const world = engine.world;
     engine.gravity.y = 1;
- 
+
     const objectList = [];
- 
-    const canvasWidth = 75/100 * window.innerWidth;
-    const canvasHeight = window.innerHeight;
- 
+
+    const canvasWidth = window.innerWidth * 0.75; // Ajustement de la taille du canvas pour qu'il prenne 75% de la largeur de l'écran
+    const canvasHeight = window.innerHeight; // Le canvas occupera toute la hauteur de l'écran
+
     const render = Render.create({
       element: document.getElementById('main-canvas'),
       engine: engine,
@@ -144,28 +122,28 @@
         pixelRatio: window.devicePixelRatio,
       }
     });
- 
+
     // Souris correctement initialisée
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
       constraint: { stiffness: 0.2, render: { visible: false } }
     });
- 
+
     Composite.add(world, mouseConstraint);
     render.mouse = mouse;
     mouse.pixelRatio = render.options.pixelRatio;
- 
+
     const runner = Runner.create();
     Runner.run(runner, engine);
     Render.run(render);
- 
+
     // Ajuster la vue exactement à la taille du canvas
     Render.lookAt(render, {
       min: { x: 0, y: 0 },
       max: { x: canvasWidth, y: canvasHeight }
     });
- 
+
     // Bordures statiques pour contenir les objets
     const borders = [
       Bodies.rectangle(canvasWidth / 2, canvasHeight - 10, canvasWidth, 20, { isStatic: true }), // Sol
@@ -174,7 +152,7 @@
       Bodies.rectangle(canvasWidth / 2, 10, canvasWidth, 20, { isStatic: true })                 // Plafond
     ];
     World.add(world, borders);
- 
+
     function updateObjectList() {
       const list = document.getElementById("object-list");
       list.innerHTML = "";
@@ -188,13 +166,13 @@
         list.appendChild(div);
       });
     }
- 
+
     function removeObject(index) {
       World.remove(world, objectList[index]);
       objectList.splice(index, 1);
       updateObjectList();
     }
- 
+
     function toggleParamMenu(type) {
       const menu = document.getElementById("param-menu");
       if (menu.dataset.type === type) {
@@ -203,11 +181,11 @@
         menu.dataset.type = "";
         return;
       }
- 
+
       menu.dataset.type = type;
       menu.style.display = "flex";
       menu.innerHTML = "";
- 
+
       if (type === "bloc") {
         menu.innerHTML = `
           <h3>Paramètres du Bloc</h3>
@@ -232,12 +210,12 @@
         `;
       }
     }
- 
+
     function addBloc() {
       const w = parseFloat(document.getElementById("bloc-w").value);
       const h = parseFloat(document.getElementById("bloc-h").value);
       const mass = parseFloat(document.getElementById("bloc-m").value);
- 
+
       const bloc = Bodies.rectangle(400, 200, w, h, {
         restitution: 0.2,
         friction: 0.5,
@@ -249,7 +227,7 @@
       objectList.push(bloc);
       updateObjectList();
     }
- 
+
     function addRessort() {
       const stiffness = parseFloat(document.getElementById("spring-k").value);
       const damping = parseFloat(document.getElementById("spring-d").value);
@@ -266,24 +244,24 @@
       objectList.push(circle);
       updateObjectList();
     }
- 
+
     function addPlan() {
       const longueur = parseFloat(document.getElementById("plan-l").value);
       const angleDeg = parseFloat(document.getElementById("plan-a").value);
       const angleRad = angleDeg * Math.PI / 180;
- 
+
       const plan = Bodies.rectangle(600, 500, longueur, 20, {
         angle: -angleRad,
         inertia: Infinity,
         friction: 0.5,
         label: `Plan ${objectList.length + 1}`
       });
- 
+
       World.add(world, plan);
       objectList.push(plan);
       updateObjectList();
     }
   </script>
-</body2>
+</body>
 </html>
 {% endblock %}
