@@ -9,7 +9,7 @@
       {% endblock %}
     </title>
     <style>
-      bodyBase {
+      body {
 	margin: 0;
 	background: #ffffff;
 	font-family: 'Work Sans', sans-serif;
@@ -17,12 +17,12 @@
 }
 
 .container {
-	width: 90%;
+	width: 80%;
 	margin: 0 auto;
 }
 
 header {
-  background: #f8f8f8;
+  background: #7fe3f5;
 }
 
 header::after {
@@ -50,7 +50,7 @@ nav ul {
 nav li {
   display: inline-block;
   margin-left: 70px;
-  padding-top: 25px;
+  padding-top: 23px;
 
   position: relative;
 }
@@ -83,7 +83,7 @@ nav a:hover::before {
   width: 100%;
 }
  </style>
-<bodyBase>
+
       </head>
       <header>
         <div class="container">
@@ -93,13 +93,12 @@ nav a:hover::before {
             <ul>
               <li><a href="http://127.0.0.1:8000/">Home</a></li>
               <li><a href="http://127.0.0.1:8000/simulations/">Simulations</a></li>
-              <li><a href="http://127.0.0.1:8000/simulation/statique/">Simulateur Statique</a></li>
+              <li><a href="#">Simulateur Statique</a></li>
+              <li><a href="#">Simulateur Cinétique</a></li>
             </ul>
           </nav>
         </div>
       </header>
-    </bodyBase>
-
       </html>
       
     {% block content %} {% endblock %}
