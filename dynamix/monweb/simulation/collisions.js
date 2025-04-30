@@ -6,6 +6,11 @@ var Engine = Matter.Engine,
     Composite = Matter.Composite,
     Body = Matter.Body;
  
+
+var canvasWidth = 800;
+var canvasHeight = 600
+
+
 // Création de l'engine et du monde
 var engine = Engine.create();
 var world = engine.world;
@@ -16,14 +21,23 @@ var render = Render.create({
     element: document.body,
     engine: engine,
     options: {
-        width: 800,
-        height: 600,
+        width: canvasWidth,
+        height: canvasHeight,
         wireframes: false
     }
 });
  
 // Création du sol
-var ground = Bodies.rectangle(400, 580, 810, 40, { isStatic: true, render: { fillStyle: '#060a19' } });
+
+const borders = [
+    Bodies.rectangle(canvasWidth / 2, canvasHeight - 10, canvasWidth, 20, { isStatic: true }),
+    Bodies.rectangle(10, canvasHeight / 2, 20, canvasHeight, { isStatic: true }),
+    Bodies.rectangle(canvasWidth - 10, canvasHeight / 2, 20, canvasHeight, { isStatic: true }),
+    Bodies.rectangle(canvasWidth / 2, 10, canvasWidth, 20, { isStatic: true })
+];
+
+
+World.add(world, borders);
  
 // Définition des objets mobiles
 var boxA, boxB;

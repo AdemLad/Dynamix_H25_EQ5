@@ -1,4 +1,5 @@
-var Engine = Matter.Engine,
+
+    var Engine = Matter.Engine,
             Render = Matter.Render,
             Runner = Matter.Runner,
             Bodies = Matter.Bodies,
@@ -33,9 +34,9 @@ var Engine = Matter.Engine,
         Runner.run(runner, engine);
  
         // Création du sol
-        var ground = Bodies.rectangle(400, 580, 800, 40, {
+        var ground = Bodies.rectangle(800, 580, 60000, 60, {
             isStatic: true,
-            render: { fillStyle: '#060a19' }
+            render: { fillStyle: '#654321' } // Couleur marron pour un sol visible
         });
  
         // Fonction pour créer un projectile avec les valeurs actuelles
@@ -53,7 +54,50 @@ var Engine = Matter.Engine,
                 render: { fillStyle: 'red' }
             });
  
- 
+
+            const vxText = document.getElementById('vx');
+const vyText = document.getElementById('vy');
+const vectorCanvas = document.getElementById('vectorCanvas');
+const vectorCtx = vectorCanvas.getContext('2d');
+
+Matter.Events.on(engine, 'afterUpdate', function () {
+    if (!projectile) return;
+
+    // Mise à jour des vitesses textuelles
+    const vx = projectile.velocity.x.toFixed(2);
+    const vy = projectile.velocity.y.toFixed(2);
+    vxText.textContent = vx;
+    vyText.textContent = vy;
+
+    // Dessin de la flèche dans le canvas fixe
+    const scale = 5;
+    const centerX = 50;
+    const centerY = 50;
+    const endX = centerX + projectile.velocity.x * scale;
+    const endY = centerY + projectile.velocity.y * scale;
+
+    vectorCtx.clearRect(0, 0, 100, 100);
+
+    // Ligne principale
+    vectorCtx.beginPath();
+    vectorCtx.moveTo(centerX, centerY);
+    vectorCtx.lineTo(endX, endY);
+    vectorCtx.strokeStyle = 'blue';
+    vectorCtx.lineWidth = 2;
+    vectorCtx.stroke();
+
+    // Tête de flèche
+    const angle = Math.atan2(endY - centerY, endX - centerX);
+    const headLength = 8;
+    vectorCtx.beginPath();
+    vectorCtx.moveTo(endX, endY);
+    vectorCtx.lineTo(endX - headLength * Math.cos(angle - Math.PI / 6), endY - headLength * Math.sin(angle - Math.PI / 6));
+    vectorCtx.lineTo(endX - headLength * Math.cos(angle + Math.PI / 6), endY - headLength * Math.sin(angle + Math.PI / 6));
+    vectorCtx.lineTo(endX, endY);
+    vectorCtx.fillStyle = 'blue';
+    vectorCtx.fill();
+});
+
         // Ajout des objets au monde
         Composite.add(world, [ground, projectile]);
  
@@ -66,29 +110,64 @@ var Engine = Matter.Engine,
                 render: { visible: false }
             }
         });
+
+        (function cameraFollow() {
+    // Mise à jour de la caméra à chaque frame
+        Matter.Events.on(engine, 'afterUpdate', function () {
+            if (projectile) {
+                // Centrer la caméra sur la balle (zoom à 1)
+                Render.lookAt(render, {
+                    min: {
+                        x: projectile.position.x - 400,
+                        y: projectile.position.y - 500
+                    },
+                    max: {
+                        x: projectile.position.x + 400,
+                        y: projectile.position.y + 100
+                    }
+                });
+            }
+        });
+    })();
  
         Composite.add(world, mouseConstraint);
         render.mouse = mouse;
  
         // Fonction pour appliquer une force au projectile
         function applyForce() {
-            var force = parseFloat(document.getElementById("force").value);
-            var angle = parseFloat(document.getElementById("angle").value) * (Math.PI / 180); // Conversion en radians
- 
-            if (isNaN(force) || isNaN(angle)) {
-                alert("Veuillez entrer des valeurs valides pour la force et l'angle.");
-                return;
-            }
- 
-            var forceX = force * Math.cos(angle);
-            var forceY = -force * Math.sin(angle); // Négatif pour aller vers le haut
- 
-            Body.applyForce(projectile, projectile.position, { x: forceX, y: forceY });
+        var force = parseFloat(document.getElementById("force").value);
+        var angle = parseFloat(document.getElementById("angle").value) * (Math.PI / 180); // Conversion en radians
+
+        if (isNaN(force) || isNaN(angle)) {
+            alert("Veuillez entrer des valeurs valides pour la force et l'angle.");
+            return;
         }
- 
+
+        const ballBottom = projectile.position.y + projectile.circleRadius;
+        const groundTop = ground.position.y - 30; // 30 = moitié de la hauteur du sol (60px dans ton code)
+
+        if (ballBottom < groundTop - 1) {
+            alert("La balle doit être au sol pour appliquer une force !");
+            return;
+        }
+
+        var forceX = force * Math.cos(angle);
+        var forceY = -force * Math.sin(angle); // Négatif pour aller vers le haut
+
+        Body.applyForce(projectile, projectile.position, { x: forceX, y: forceY });
+    }
+
+    (function updateVelocityDisplay() {
+    Matter.Events.on(engine, 'afterUpdate', function () {
+        if (projectile) {
+            document.getElementById("vx").textContent = projectile.velocity.x.toFixed(2);
+            document.getElementById("vy").textContent = -projectile.velocity.y.toFixed(2);
+        }
+    });
+})();
         // Fonction pour réinitialiser le projectile
         function resetObject() {
-            Body.setPosition(projectile, { x: 150, y: 500 });
+            Body.setPosition(projectile, { x: 0, y: 500 });
             Body.setVelocity(projectile, { x: 0, y: 0 });
             Body.setAngularVelocity(projectile, 0);
         }
