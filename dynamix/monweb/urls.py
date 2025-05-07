@@ -15,7 +15,7 @@ urlpatterns = [
     path("simulation/frottement/", views.frottement, name="frottement"),
     path("simulation/poulie/", views.poulie, name="poulie"),
     path("simulation/densite/", views.densite, name="densite"),
-    path("simulation//", views.gravite, name="gravite"),
+    path("simulation/gravite/", views.gravite, name="gravite"),
 
     
 ]
