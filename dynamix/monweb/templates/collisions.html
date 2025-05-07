@@ -1,6 +1,6 @@
-{% extends "base.html" %} {% block title %} Home Page {% endblock %}
-{% block content %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
   <script src="{% static 'collisions.js' %}" defer></script>
 
   <style>
-    bodyCollisions {
+    body {
       font-family: 'Roboto', sans-serif;
       background: #f0f2f5;
       margin: 0;
@@ -71,7 +71,8 @@
     }
   </style>
 </head>
-<bodyCollisions>
+<body>
+  {% include "navbar.html" %}  
   <h1>Simulation de Collision</h1>
   <div class="controls">
     <div class="control-group">
@@ -147,6 +148,5 @@ color: #333;
 </div>
 
   </div>
-</bodyCollisions>
+</body>
 </html>
-{% endblock %}

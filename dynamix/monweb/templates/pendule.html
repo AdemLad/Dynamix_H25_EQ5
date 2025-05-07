@@ -1,6 +1,6 @@
-{% extends "base.html" %} {% block title %} Home Page {% endblock %}
-{% block content %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
   <script src="{% static 'pendule.js' %}" defer></script>
 </head>
 <body>
-
+  {% include "navbar.html" %}
   <h1>Pendule Physique</h1>
 
   <div class="controls">
@@ -33,4 +33,3 @@
 
 </body>
 </html>
-{% endblock %}
