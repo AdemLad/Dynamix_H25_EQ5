@@ -32,9 +32,12 @@ Render.run(render);
 var runner = Runner.create();
 Runner.run(runner, engine);
 
+engine.world.gravity.y = 0;
+
+
 // Création des deux boules avec masses initiales
 var ball1 = Bodies.circle(300, 300, 20, { mass: 5 });
-var ball2 = Bodies.circle(500, 300, 20, { mass: 10 });
+var ball2 = Bodies.circle(500, 300, 20, { mass: 15 });
 
 // Ajouter les boules au monde
 Composite.add(world, [ball1, ball2]);
@@ -94,3 +97,15 @@ document.body.appendChild(slider2);
 slider2.addEventListener('input', function() {
     ball2.mass = parseFloat(slider2.value);
 });
+
+var mouse = Mouse.create(render.canvas);
+var mouseConstraint = MouseConstraint.create(engine, {
+    mouse: mouse,
+    constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
+    }
+});
+
+Composite.add(world, mouseConstraint);
+render.mouse = mouse;
