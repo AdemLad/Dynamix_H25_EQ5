@@ -1,0 +1,74 @@
+<style>
+    .topnav-container {
+        font-family: 'Work Sans', sans-serif;
+        font-weight: 800;
+        position: fixed; /* Fixed positioning at the top */
+        top: 0;
+        width: 100%; /* Ensure it takes up the full width */
+        height: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%; /* Adds padding to the left and right */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        background-color: #f8f8f8;
+        box-sizing: border-box; /* Prevents overflow caused by padding */
+    }
+
+    .logo {
+        font-size: 30px;
+        font-weight: bold;
+        color: #444;
+    }
+
+    nav ul {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    nav li {
+        margin-left: 50px; /* Adjust space between links */
+        position: relative;
+    }
+
+    nav a {
+        color: #444;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 14px;
+        padding-top: 25px;
+    }
+
+    nav a:hover {
+        color: #000;
+    }
+
+    nav a::before {
+        content: '';
+        display: block;
+        height: 5px;
+        background-color: #444;
+        position: absolute;
+        top: 0;
+        width: 0%;
+        transition: all ease-in-out 250ms;
+    }
+
+    nav a:hover::before {
+        width: 100%;
+    }
+</style>
+
+<div class="topnav-container">
+    <h1 class="logo">Dynamix</h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/simulations/">Simulations</a></li>
+            <li><a href="/simulation/statique/">Simulateur Statique</a></li>
+        </ul>
+    </nav>
+</div>

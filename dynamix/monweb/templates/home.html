@@ -1,7 +1,12 @@
-{% extends "base.html" %} {% block title %} Home Page {% endblock %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
 body {
+  font-family: 'Work Sans', sans-serif;
+   font-weight: 800;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -43,7 +48,7 @@ body {
   </style>
   
   <body>
-      
+    {% include "navbar.html" %}  
       <section class="app">
           <h1>Dynamix</h1>
           <p>Engin de simulateur physique</p>
@@ -82,4 +87,3 @@ body {
 
   </body>
   </html>
-{% endblock %}

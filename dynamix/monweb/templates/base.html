@@ -5,106 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Dynamix{% endblock %}</title>
   <style>
-
-    main {
-      display: flex;
-      flex-direction: row;
-      height: calc(100vh - 80px); /* pleine hauteur - hauteur du header */
-    }
-
     body {
       margin: 0;
-      background: #ffffff;
+      background: #f8f8f8;
       font-family: 'Work Sans', sans-serif;
       font-weight: 800;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      width: 90%;
-      margin: 0 auto;
-    }
-
-    header {
-      background: #f8f8f8;
-    }
-
-    header::after {
-      content: '';
-      display: table;
-      clear: both;
-    }
-
-    .logo {
-      float: left;
-      padding: 10px 0;
-      font-weight: bold;
-    }
-
-    nav {
-      float: right;
-    }
-
-    nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    nav li {
-      display: inline-block;
-      margin-left: 70px;
-      padding-top: 25px;
-      position: relative;
-    }
-
-    nav a {
-      color: #444;
-      text-decoration: none;
-      text-transform: uppercase;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #000;
-    }
-
-    nav a::before {
-      content: '';
-      display: block;
-      height: 5px;
-      background-color: #444;
-      position: absolute;
-      top: 0;
-      width: 0%;
-      transition: all ease-in-out 250ms;
-    }
-
-    nav a:hover::before {
-      width: 100%;
     }
 
     main {
-      flex: 1;
-      display: flex;
+      margin-top: 80px; /* Push content below nav bar */
+      padding: 20px;
+      min-height: calc(100vh - 80px);
+      background: #ffffff;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1 class="logo" style="font-size:30px">Dynamix</h1>
-      <nav>
-        <ul>
-          <li><a href="http://127.0.0.1:8000/">Home</a></li>
-          <li><a href="http://127.0.0.1:8000/simulations/">Simulations</a></li>
-          <li><a href="http://127.0.0.1:8000/simulation/statique/">Simulateur Statique</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+
+  {% include "navbar.html" %}
 
   <main>
     {% block content %}{% endblock %}
