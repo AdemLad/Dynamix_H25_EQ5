@@ -34,8 +34,8 @@ Executeur.run(executeur, moteur);
 moteur.world.gravity.y = 0;
 
 // Création des deux boules avec masses initiales
-var boule1 = Corps.circle(300, 300, 20, { mass: 19 });
-var boule2 = Corps.circle(500, 300, 20, { mass: 19 });
+var boule1 = Corps.circle(300, 300, 20, { mass: 2 });
+var boule2 = Corps.circle(500, 300, 20, { mass: 2 });
 
 // Ajout des boules au monde
 Composite.add(monde, [boule1, boule2]);
