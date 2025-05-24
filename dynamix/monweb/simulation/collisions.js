@@ -1,21 +1,21 @@
-// Matter.js components
+// Composants de Matter.js
 var Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
     Bodies = Matter.Bodies,
     Composite = Matter.Composite,
-    Body = Matter.Body;
- 
+    Body = Matter.Body,
+    Mouse = Matter.Mouse,
+    MouseConstraint = Matter.MouseConstraint;
 
 var canvasWidth = 800;
-var canvasHeight = 600
+var canvasHeight = 600;
 
-
-// Création de l'engine et du monde
+// Création de l'engin et du monde
 var engine = Engine.create();
 var world = engine.world;
-engine.world.gravity.y = 0; // Désactive la gravité
- 
+engine.world.gravity.y = 0; // Gravité désactivée
+
 // Création du rendu
 var render = Render.create({
     element: document.body,
@@ -23,12 +23,18 @@ var render = Render.create({
     options: {
         width: canvasWidth,
         height: canvasHeight,
-        wireframes: false
+        wireframes: false,
+        background: '#000000'
     }
 });
- 
-// Création du sol
 
+Render.run(render);
+
+// Démarrage du moteur de simulation
+var runner = Runner.create();
+Runner.run(runner, engine);
+
+// Création des bordures du monde
 const borders = [
     Bodies.rectangle(canvasWidth / 2, canvasHeight - 10, canvasWidth, 20, { isStatic: true }),
     Bodies.rectangle(10, canvasHeight / 2, 20, canvasHeight, { isStatic: true }),
@@ -36,19 +42,18 @@ const borders = [
     Bodies.rectangle(canvasWidth / 2, 10, canvasWidth, 20, { isStatic: true })
 ];
 
-
 World.add(world, borders);
- 
+
 // Définition des objets mobiles
 var boxA, boxB;
 function createObjects() {
-    // Get the values from the HTML input fields
+    // Récupération des valeurs des champs HTML
     var massA = parseFloat(document.getElementById("massA").value);
     var radiusA = parseFloat(document.getElementById("rayonA").value);
     var massB = parseFloat(document.getElementById("massB").value);
     var radiusB = parseFloat(document.getElementById("rayonB").value);
- 
-    // Create the first object (boxA)
+
+    // Création du premier objet (boxA)
     boxA = Bodies.circle(150, 500, radiusA, {
         mass: massA,
         restitution: 0.8,
@@ -58,8 +63,8 @@ function createObjects() {
         frictionStatic: 0,
         render: { fillStyle: 'red' }
     });
- 
-    // Create the second object (boxB)
+
+    // Création du second objet (boxB)
     boxB = Bodies.circle(650, 500, radiusB, {
         mass: massB,
         restitution: 0.8,
@@ -69,69 +74,62 @@ function createObjects() {
         frictionStatic: 0,
         render: { fillStyle: 'blue' }
     });
- 
-    // Add the objects to the world
+
+    // Ajout des objets au monde
     Composite.add(world, [boxA, boxB]);
 }
- 
-// Call createObjects to initialize the objects
+
+// Initialisation des objets
 createObjects();
 Composite.add(world, [ground]);
- 
-// Function to update objects based on user input
+
+// Fonction pour mettre à jour les objets selon les valeurs utilisateur
 function updateObjects() {
-    // Remove the old objects
+    // Suppression des anciens objets
     Composite.remove(world, [boxA, boxB]);
- 
-    // Recreate the objects with updated values
+
+    // Recréation des objets avec les nouvelles valeurs
     createObjects();
- 
-    // Reset their position and velocity
+
+    // Réinitialisation position et vitesse
     resetObjects();
 }
- 
-// Function to apply force on both objects
+
+// Fonction pour appliquer les forces aux deux objets
 function applyForces() {
     applyForceA();
     applyForceB();
 }
- 
-// Function to apply force to boxA
+
+// Fonction pour appliquer une force à boxA
 function applyForceA() {
     var forceA = parseFloat(document.getElementById("forceA").value);
     var angleA = parseFloat(document.getElementById("angleA").value) * (Math.PI / 180);
- 
+
     var forceXA = forceA * Math.cos(angleA);
     var forceYA = -forceA * Math.sin(angleA);
- 
+
     Body.applyForce(boxA, boxA.position, { x: forceXA, y: forceYA });
 }
- 
-// Function to apply force to boxB
+
+// Fonction pour appliquer une force à boxB
 function applyForceB() {
     var forceB = parseFloat(document.getElementById("forceB").value);
     var angleB = parseFloat(document.getElementById("angleB").value) * (Math.PI / 180);
- 
+
     var forceXB = forceB * Math.cos(angleB);
     var forceYB = -forceB * Math.sin(angleB);
- 
+
     Body.applyForce(boxB, boxB.position, { x: forceXB, y: forceYB });
 }
- 
-// Function to reset objects to their initial position and velocity
+
+// Fonction pour réinitialiser les positions et vitesses des objets
 function resetObjects() {
     Body.setPosition(boxA, { x: 150, y: 500 });
     Body.setVelocity(boxA, { x: 0, y: 0 });
     Body.setAngularVelocity(boxA, 0);
- 
+
     Body.setPosition(boxB, { x: 650, y: 500 });
     Body.setVelocity(boxB, { x: 0, y: 0 });
     Body.setAngularVelocity(boxB, 0);
 }
- 
-// Start the renderer
-Render.run(render);
- 
-// Create and run the engine
-var runner = Runner.create();
-Runner.run(runner, engine);

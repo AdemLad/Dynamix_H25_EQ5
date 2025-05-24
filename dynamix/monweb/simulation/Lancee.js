@@ -9,7 +9,7 @@
             MouseConstraint = Matter.MouseConstraint;
  
  
-            let projectiles = []
+            
  
  
         // Création de l'engine et du monde
