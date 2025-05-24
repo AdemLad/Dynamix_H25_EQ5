@@ -1,21 +1,21 @@
-var Engine = Matter.Engine,
-    Render = Matter.Render,
-    Runner = Matter.Runner,
-    Bodies = Matter.Bodies,
+var Moteur = Matter.Engine,
+    Rendu = Matter.Render,
+    Executeur = Matter.Runner,
+    Corps = Matter.Bodies,
     Composite = Matter.Composite,
-    Constraint = Matter.Constraint,
-    MouseConstraint = Matter.MouseConstraint,
-    Mouse = Matter.Mouse,
-    Body = Matter.Body;
+    Contrainte = Matter.Constraint,
+    ContrainteSouris = Matter.MouseConstraint,
+    Souris = Matter.Mouse,
+    CorpsUnitaire = Matter.Body;
 
-// Création de l'engine et du monde
-var engine = Engine.create();
-var world = engine.world;
+// Création du moteur et du monde
+var moteur = Moteur.create();
+var monde = moteur.world;
 
 // Création du rendu
-var render = Render.create({
+var rendu = Rendu.create({
     element: document.body,
-    engine: engine,
+    engine: moteur,
     options: {
         width: 800,
         height: 600,
@@ -23,79 +23,71 @@ var render = Render.create({
     }
 });
 
-Render.run(render);
+Rendu.run(rendu);
 
 // Création du moteur physique
-var runner = Runner.create();
-Runner.run(runner, engine);
+var executeur = Executeur.create();
+Executeur.run(executeur, moteur);
 
 // Ajout du contrôle souris
-var mouse = Mouse.create(render.canvas);
-var mouseConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
+var souris = Souris.create(rendu.canvas);
+var contrainteSouris = ContrainteSouris.create(moteur, {
+    mouse: souris,
     constraint: {
         angularStiffness: 0,
         render: { visible: false }
     }
 });
 
-Composite.add(world, mouseConstraint);
-render.mouse = mouse;
+Composite.add(monde, contrainteSouris);
+rendu.mouse = souris;
 
-//Création des objets
-//4mures
-var mureA = Bodies.rectangle(400, 0, 800, 50, { 
-    isStatic: true ,
-});
-var mureB = Bodies.rectangle(400, 600, 800, 50, { 
-    isStatic: true,
- });
-var mureC = Bodies.rectangle(800, 300, 50, 600, { 
-    isStatic: true,
-});
-var mureD =  Bodies.rectangle(0, 300, 50, 600, {
-     isStatic: true,
-});
+// Création des objets
+// 4 murs
+var murA = Corps.rectangle(400, 0, 800, 50, { isStatic: true });
+var murB = Corps.rectangle(400, 600, 800, 50, { isStatic: true });
+var murC = Corps.rectangle(800, 300, 50, 600, { isStatic: true });
+var murD = Corps.rectangle(0, 300, 50, 600, { isStatic: true });
 
-//création des objets
-var tableA = Bodies.rectangle(0,300,600,25, {
+// Création de la table
+var tableA = Corps.rectangle(0, 300, 600, 25, {
     isStatic: true,
     render: { fillStyle: "gray" }
 });
 
 // Ajout des objets au monde
-Composite.add(world, [mureA, mureB, mureC, mureD, tableA]);
+Composite.add(monde, [murA, murB, murC, murD, tableA]);
 
 // Fonction pour réinitialiser le monde
-function resetFrottement() {
-    
+function reinitialiserFrottement() {
+
 }
 
 // Fonction pour mettre à jour les objets
-function updateFrottement() {
+function mettreAJourFrottement() {
     // Récupérer les nouvelles valeurs
-    var newRadius = parseFloat(document.getElementById("radius").value);
-    var newMass = parseFloat(document.getElementById("mass").value);
+    var nouveauRayon = parseFloat(document.getElementById("radius").value);
+    var nouvelleMasse = parseFloat(document.getElementById("mass").value);
 
     // Vérification des entrées utilisateur
-    if (isNaN(newRadius) || newRadius <= 0) newRadius = 30;
-    if (isNaN(newMass) || newMass <= 0) newMass = 1;
+    if (isNaN(nouveauRayon) || nouveauRayon <= 0) nouveauRayon = 30;
+    if (isNaN(nouvelleMasse) || nouvelleMasse <= 0) nouvelleMasse = 1;
 
     // Supprimer l'ancien pendule et sa liaison
-    Composite.remove(world, [pendulum, rod]);
+    Composite.remove(monde, [pendule, tige]);
 
     // Créer un nouveau pendule avec les nouvelles valeurs
-    pendulum = Bodies.circle(400, 300, newRadius, { 
-        mass: newMass, 
-        friction: 0, 
-        frictionAir: 0, 
-        inertia: Infinity, 
-        render: { fillStyle: "blue" } 
+    pendule = Corps.circle(400, 300, nouveauRayon, {
+        mass: nouvelleMasse,
+        friction: 0,
+        frictionAir: 0,
+        inertia: Infinity,
+        render: { fillStyle: "blue" }
     });
 
     // Ajouter le nouveau pendule au monde
-    Composite.add(world, [pendulum, rod]);
+    Composite.add(monde, [pendule, tige]);
 
     // Réinitialiser la position et vitesse
-    resetPendulum();
+    reinitialiserPendule();
 }

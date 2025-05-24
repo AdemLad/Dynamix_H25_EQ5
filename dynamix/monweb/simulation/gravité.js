@@ -1,24 +1,23 @@
-var Engine = Matter.Engine,
-    Render = Matter.Render,
-    Runner = Matter.Runner,
-    Bodies = Matter.Bodies,
+var Moteur = Matter.Engine,
+    Rendu = Matter.Render,
+    Executeur = Matter.Runner,
+    Corps = Matter.Bodies,
     Composite = Matter.Composite,
-    Body = Matter.Body,
-    Mouse = Matter.Mouse,
-    MouseConstraint = Matter.MouseConstraint;
+    CorpsUnitaire = Matter.Body,
+    Souris = Matter.Mouse,
+    ContrainteSouris = Matter.MouseConstraint;
 
-// Constantes de gravité
-const G = 1; // Constante gravitationnelle
+// Constante gravitationnelle
+const G = 1;
 
-
-// Création de l'engine et du monde
-var engine = Engine.create();
-var world = engine.world;
+// Création du moteur et du monde
+var moteur = Moteur.create();
+var monde = moteur.world;
 
 // Création du rendu
-var render = Render.create({
+var rendu = Rendu.create({
     element: document.body,
-    engine: engine,
+    engine: moteur,
     options: {
         width: 800,
         height: 600,
@@ -26,91 +25,87 @@ var render = Render.create({
     }
 });
 
-Render.run(render);
+Rendu.run(rendu);
 
 // Création du moteur physique
-var runner = Runner.create();
-Runner.run(runner, engine);
+var executeur = Executeur.create();
+Executeur.run(executeur, moteur);
 
-engine.world.gravity.y = 0;
-
+moteur.world.gravity.y = 0;
 
 // Création des deux boules avec masses initiales
-var ball1 = Bodies.circle(300, 300, 20, { mass: 19 });
-var ball2 = Bodies.circle(500, 300, 20, { mass: 19 });
+var boule1 = Corps.circle(300, 300, 20, { mass: 19 });
+var boule2 = Corps.circle(500, 300, 20, { mass: 19 });
 
-// Ajouter les boules au monde
-Composite.add(world, [ball1, ball2]);
+// Ajout des boules au monde
+Composite.add(monde, [boule1, boule2]);
 
 // Fonction pour calculer la distance entre les deux boules
-function calculateDistance(body1, body2) {
-    var dx = body2.position.x - body1.position.x;
-    var dy = body2.position.y - body1.position.y;
-    return  Math.sqrt((dx * dx) + (dy * dy));
+function calculerDistance(corps1, corps2) {
+    var dx = corps2.position.x - corps1.position.x;
+    var dy = corps2.position.y - corps1.position.y;
+    return Math.sqrt((dx * dx) + (dy * dy));
 }
 
-// Fonction pour appliquer la force de gravité entre les deux boules
-function applyGravity() {
-    var distance = calculateDistance(ball1, ball2);
+// Fonction pour appliquer la force gravitationnelle entre les deux boules
+function appliquerGravite() {
+    var distance = calculerDistance(boule1, boule2);
     if (distance > 0) {
-        var force = G * (ball1.mass * ball2.mass) / (distance * distance); // F = G * (m1 * m2) / d^2
-        
-        var fx = force * (ball2.position.x - ball1.position.x) / distance; // Force sur l'axe X
-        var fy = force * (ball2.position.y - ball1.position.y) / distance; // Force sur l'axe Y
+        var force = G * (boule1.mass * boule2.mass) / (distance * distance); // F = G * (m1 * m2) / d^2
+
+        var fx = force * (boule2.position.x - boule1.position.x) / distance; // Force sur X
+        var fy = force * (boule2.position.y - boule1.position.y) / distance; // Force sur Y
 
         // Appliquer la force à chaque boule
-        Body.applyForce(ball1, ball1.position, { x: fx, y: fy });
-        Body.applyForce(ball2, ball2.position, { x: -fx, y: -fy });
+        CorpsUnitaire.applyForce(boule1, boule1.position, { x: fx, y: fy });
+        CorpsUnitaire.applyForce(boule2, boule2.position, { x: -fx, y: -fy });
     }
 }
 
-// Mettre à jour la simulation à chaque tick
-Matter.Events.on(engine, 'beforeUpdate', function() {
-    applyGravity(); // Appliquer la gravité à chaque frame
+// Mise à jour de la gravité à chaque tick
+Matter.Events.on(moteur, 'beforeUpdate', function() {
+    appliquerGravite();
 });
 
-// Contrôles de la masse des boules (exemple simple avec des sliders) 
+// Sliders de contrôle des masses
 
+var curseur1 = document.createElement("input");
+curseur1.type = "range";
+curseur1.min = 1;
+curseur1.max = 100;
+curseur1.value = boule1.mass;
+curseur1.style.position = "absolute";
+curseur1.style.top = "20px";
+curseur1.style.left = "20px";
+document.body.appendChild(curseur1);
 
-//A AJOUTER SUIVANT
-
-
-var slider1 = document.createElement("input");
-slider1.type = "range";
-slider1.min = 1;
-slider1.max = 100;
-slider1.value = ball1.mass;
-slider1.style.position = "absolute";
-slider1.style.top = "20px";
-slider1.style.left = "20px";
-document.body.appendChild(slider1);
-
-slider1.addEventListener('input', function() {
-    ball1.mass = parseFloat(slider1.value);
+curseur1.addEventListener('input', function() {
+    boule1.mass = parseFloat(curseur1.value);
 });
 
-var slider2 = document.createElement("input");
-slider2.type = "range";
-slider2.min = 1;
-slider2.max = 100;
-slider2.value = ball2.mass;
-slider2.style.position = "absolute";
-slider2.style.top = "60px";
-slider2.style.left = "20px";
-document.body.appendChild(slider2);
+var curseur2 = document.createElement("input");
+curseur2.type = "range";
+curseur2.min = 1;
+curseur2.max = 100;
+curseur2.value = boule2.mass;
+curseur2.style.position = "absolute";
+curseur2.style.top = "60px";
+curseur2.style.left = "20px";
+document.body.appendChild(curseur2);
 
-slider2.addEventListener('input', function() {
-    ball2.mass = parseFloat(slider2.value);
+curseur2.addEventListener('input', function() {
+    boule2.mass = parseFloat(curseur2.value);
 });
 
-var mouse = Mouse.create(render.canvas);
-var mouseConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
+// Ajout de la souris
+var souris = Souris.create(rendu.canvas);
+var contrainteSouris = ContrainteSouris.create(moteur, {
+    mouse: souris,
     constraint: {
         stiffness: 0.2,
         render: { visible: false }
     }
 });
 
-Composite.add(world, mouseConstraint);
-render.mouse = mouse;
+Composite.add(monde, contrainteSouris);
+rendu.mouse = souris;
