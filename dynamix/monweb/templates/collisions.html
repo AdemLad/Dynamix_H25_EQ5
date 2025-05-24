@@ -2,16 +2,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Collision de Deux Objets</title>
-
-  <script type="text/javascript" src="../simulation/matter.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-  <script src="{% static 'collisions.js' %}" defer></script>
-
+  <script src="../simulation/collisions.js" defer></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -21,17 +18,13 @@
       flex-direction: column;
       align-items: center;
     }
+
     h1 {
       margin-top: 20px;
       font-size: 1.8rem;
       color: #333;
     }
-    /*canvas {
-      background: linear-gradient(to bottom, #b3d4fc, #7e69f1);
-      box-shadow: 0 0 20px rgba(48, 98, 233, 0.1);
-      margin: 20px 0;
-      border: 2px solid #ccc;
-    }*/
+
     .controls {
       background: white;
       padding: 20px 25px;
@@ -42,17 +35,21 @@
       gap: 15px;
       justify-content: center;
       max-width: 800px;
+      position: relative;
     }
+
     label {
       font-weight: bold;
       color: #444;
     }
+
     input {
       padding: 6px 10px;
       border: 1px solid #ccc;
       border-radius: 6px;
       width: 80px;
     }
+
     button {
       background: #007BFF;
       color: white;
@@ -63,9 +60,11 @@
       font-weight: bold;
       transition: background 0.3s;
     }
+
     button:hover {
       background: #0056b3;
     }
+
     .control-group {
       display: flex;
       flex-direction: column;
@@ -74,8 +73,9 @@
   </style>
 </head>
 <body>
-  {% include "navbar.html" %}  
+  {% include "navbar.html" %}
   <h1>Simulation de Collision</h1>
+
   <div class="controls">
     <div class="control-group">
       <label for="forceA">Force A (N)</label>
@@ -93,6 +93,7 @@
       <label for="rayonA">Rayon A (px)</label>
       <input type="number" id="rayonA" value="20" step="1">
     </div>
+
     <div class="control-group">
       <label for="forceB">Force B (N)</label>
       <input type="number" id="forceB" value="0.02" step="0.01">
@@ -109,46 +110,24 @@
       <label for="rayonB">Rayon B (px)</label>
       <input type="number" id="rayonB" value="20" step="1">
     </div>
+
     <div class="control-group" style="flex-direction: row; gap: 10px; margin-top: 10px;">
-      <button onclick="applyForces()">Lancer</button>
-      <button onclick="resetObjects()">Réinitialiser</button>
-      <button onclick="updateObjects()">Mettre à jour</button>
+      <button onclick="appliquerForces()">Lancer</button>
+      <button onclick="reinitialiserObjets()">Réinitialiser</button>
+      <button onclick="mettreAJourObjets()">Mettre à jour</button>
     </div>
-    <!-- Affichage des vitesses et vecteurs -->
-<div id="velocityDisplayA" style="
-position: absolute;
-right: 30px;
-top: 80px;
-background: white;
-padding: 16px;
-border-radius: 10px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-font-family: 'Roboto', sans-serif;
-color: #333;
-">
-<strong>Balle A</strong>
-<div>Vx : <span id="vxA">0</span> px/s</div>
-<div>Vy : <span id="vyA">0</span> px/s</div>
-<canvas id="vectorCanvasA" width="100" height="100" style="margin-top: 10px;"></canvas>
-</div>
 
-<div id="velocityDisplayB" style="
-position: absolute;
-right: 30px;
-top: 230px;
-background: white;
-padding: 16px;
-border-radius: 10px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-font-family: 'Roboto', sans-serif;
-color: #333;
-">
-<strong>Balle B</strong>
-<div>Vx : <span id="vxB">0</span> px/s</div>
-<div>Vy : <span id="vyB">0</span> px/s</div>
-<canvas id="vectorCanvasB" width="100" height="100" style="margin-top: 10px;"></canvas>
-</div>
+    <div id="velocityDisplayA" style="position: absolute; right: 30px; top: 80px;">
+      <strong>Balle A</strong>
+      <div>Vx : <span id="vxA">0</span> px/s</div>
+      <div>Vy : <span id="vyA">0</span> px/s</div>
+    </div>
 
+    <div id="velocityDisplayB" style="position: absolute; right: 30px; top: 230px;">
+      <strong>Balle B</strong>
+      <div>Vx : <span id="vxB">0</span> px/s</div>
+      <div>Vy : <span id="vyB">0</span> px/s</div>
+    </div>
   </div>
 </body>
 </html>
